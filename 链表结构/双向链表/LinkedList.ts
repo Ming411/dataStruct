@@ -50,6 +50,20 @@ export default class LinkedList<T> {
       newNode.prev = this.tail;
       this.tail = newNode;
     }
+    this.size++;
+  }
+  // 往头部增加元素
+  prepend(value: T): void {
+    const newNode = new DoublyNode(value);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head.prev = newNode;
+      this.head = newNode;
+    }
+    this.size++;
   }
   // 遍历链表
   traverse() {
@@ -70,26 +84,34 @@ export default class LinkedList<T> {
     }
     console.log(values.join('->'));
   }
+
+  // 从后向前遍历
+  postTraverse() {
+    const values: T[] = [];
+    let current = this.tail;
+    while (current) {
+      values.push(current.value);
+      current = current.prev;
+    }
+    console.log(values.join('->'));
+  }
+
   // 插入方法
   insert(value: T, position: number): boolean {
     if (position < 0 || position > this.size) return false;
-    const newNode = new DoublyNode(value);
     if (position === 0) {
-      // 替换head
-      newNode.next = this.head;
-      this.head = newNode;
-      this.tail!.next = this.head; // 插到头节点前，更新tail链接
+      this.prepend(value);
+    } else if (position === this.size) {
+      this.append(value);
     } else {
-      let previous = this.getNode(position - 1);
-      newNode.next = previous!.next;
-      previous!.next = newNode;
-      if (position === this.length) {
-        // 正好插入在最后时，更新tail
-        this.tail = newNode;
-        this.tail.next = this.head; // 链接到头节点
-      }
+      const newNode = new DoublyNode(value);
+      const current = this.getNode(position);
+      current!.prev!.next = newNode;
+      newNode.next = current;
+      newNode.prev = current!.prev;
+      current!.prev = newNode;
+      this.size++;
     }
-    this.size++;
     return true;
   }
   // 删除方法
@@ -98,26 +120,25 @@ export default class LinkedList<T> {
     if (position < 0 || position >= this.size) return null;
     let current = this.head;
     if (position === 0) {
-      // 删除第一个节点
-      this.head = this.head?.next ?? null;
-      this.tail!.next = this.head;
       if (this.length === 1) {
-        // 正好只有一个节点且被删除
+        // 只剩一个节点
+        this.head = null;
         this.tail = null;
+      } else {
+        this.head = this.head!.next;
+        this.head!.prev = null;
       }
+    } else if (position === this.length - 1) {
+      // 删除的是最后一个
+      current = this.tail;
+      this.tail = this.tail!.prev;
+      this.tail!.next = null;
     } else {
-      let previous = this.getNode(position - 1);
-      current = previous!.next;
-      previous!.next = previous?.next?.next ?? null;
-      // 正好删除最后一个节点
-      if (position === this.length - 1) {
-        this.tail = previous;
-        this.tail!.next = this.head; // 链接到头节点
-      }
+      current = this.getNode(position);
+      current!.next!.prev = current!.prev;
+      current!.prev!.next = current!.next;
     }
-
     this.size--;
-    // `??` 运算符只在左侧操作数为 null 或 undefined 时才返回右侧操作数，否则返回左侧操作数
     return current?.value ?? null;
   }
   // 根据值进行删除
@@ -161,3 +182,19 @@ export default class LinkedList<T> {
     return this.size === 0;
   }
 }
+const dLinkedList = new LinkedList<string>();
+dLinkedList.append('aaa');
+dLinkedList.append('bbb');
+dLinkedList.prepend('QQQ');
+dLinkedList.prepend('PPP');
+dLinkedList.traverse(); // PPP->QQQ->aaa->bbb
+dLinkedList.postTraverse(); // bbb->aaa->QQQ->PPP
+
+// dLinkedList.insert('why', 0);
+// dLinkedList.insert('coder', 4);
+// dLinkedList.insert('no', 2);
+
+// dLinkedList.removeAt(0);
+// dLinkedList.removeAt(2);
+dLinkedList.removeAt(1);
+dLinkedList.traverse();

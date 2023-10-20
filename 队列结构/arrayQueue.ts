@@ -17,7 +17,7 @@ interface IQueue<T> extends IList<T> {
   dequeue(): T | undefined;
 }
 export default class ArrayQueue<T> implements IQueue<T> {
-  private data: T[] = [];
+  protected data: T[] = [];
   enqueue(element: T) {
     this.data.push(element);
   }

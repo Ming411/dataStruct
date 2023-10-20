@@ -1,4 +1,4 @@
-class Heap<T> {
+export default class Heap<T> {
   data: T[] = [];
   private length: number = 0;
   private isMax: boolean = true; // 是否为最大堆
@@ -112,7 +112,7 @@ class Heap<T> {
 // heap.extract();
 // console.log(heap.data);
 
-const heap = new Heap<number>([9, 11, 20, 56, 23, 45]);
-console.log(heap.data);
+// const heap = new Heap<number>([9, 11, 20, 56, 23, 45]);
+// console.log(heap.data);
 
-export {};
+// export {};

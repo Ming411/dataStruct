@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <script>
-      class ListNode {
-        constructor(val, next) {
-          this.val = val === undefined ? 0 : val;
-          this.next = next === undefined ? null : next;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+
+    function insertionSort (arr) {
+      const n = arr.length;
+      for (let i = 1; i < n; i++) {
+        const newNum = arr[i]; // 需要插入的元素
+        let j = i - 1;
+        debugger
+        while (arr[j] > newNum && j >= 0) {
+          // 需要插入的元素与前面的每个元素进行比较
+          // 如果插入的元素小于某个元素，将这个元素向后移动一位
+          arr[j + 1] = arr[j];
+          j--;
         }
+        arr[j + 1] = newNum;
       }
+      return arr;
+    }
 
-      function reverseList(head) {
-        // 1 为空 或者 next为空
-        if (head === null || head.next === null) return head;
+    console.log(insertionSort([128, 168, 72, 8, 19,
+      10, 18, 34, 171, 28]));
 
-        const newHead = reverseList(head.next ?? null);
+  </script>
+</body>
 
-        // 第一次来到这里是倒数第二个节点
-        head.next.next = head;
-        head.next = null;
-
-        return newHead;
-      }
-
-      const node1 = new ListNode(1);
-      node1.next = new ListNode(2);
-      node1.next.next = new ListNode(3);
-
-      debugger;
-      const newHead = reverseList(node1);
-      let current = newHead;
-      while (current) {
-        console.log(current.val);
-        current = current.next;
-      }
-    </script>
-  </body>
 </html>
